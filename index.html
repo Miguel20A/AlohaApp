@@ -3,36 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AlohaApp - Encuentra tu roomie ideal</title>
+    <title>AlohaApp - IA Roomie Finder</title>
     
-    <!-- Tailwind CSS (Framework de diseño) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
     
-    <!-- Fuentes de Google: Caprasimo (Títulos) y Quicksand (Cuerpo) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Caprasimo&family=Quicksand:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Caprasimo&family=Quicksand:wght@400;500;600;700&display=swap)" rel="stylesheet">
 
-    <!-- Configuración personalizada de Tailwind -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         aloha: {
-                            light: '#E8FDF0', // Fondo muy suave
-                            main: '#C6F5D4',  // El verde pastel solicitado
-                            dark: '#059669',  // Verde intermedio para elementos UI
-                            text: '#064E3B',  // Verde oscuro para texto (legibilidad)
-                            accent: '#FCD34D', // Amarillo suave para destacar
+                            light: '#E8FDF0',
+                            main: '#C6F5D4',
+                            dark: '#059669',
+                            text: '#064E3B',
+                            accent: '#FCD34D',
                         }
                     },
                     fontFamily: {
                         display: ['Caprasimo', 'cursive'],
                         body: ['Quicksand', 'sans-serif'],
-                    },
-                    borderRadius: {
-                        '4xl': '2rem',
                     }
                 }
             }
@@ -40,413 +36,144 @@
     </script>
 
     <style>
-        /* Estilos adicionales para animaciones suaves */
-        body {
-            font-family: 'Quicksand', sans-serif;
-            color: #064E3B;
-            background-color: #FAFAF9;
-        }
-        h1, h2, h3, h4, .font-display {
-            font-family: 'Caprasimo', cursive;
-        }
-        
-        /* Animación suave al hacer hover en botones */
-        .btn-hover {
-            transition: all 0.3s ease;
-        }
-        .btn-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(198, 245, 212, 0.5);
-        }
-
-        /* Mockup del teléfono en CSS puro */
-        .phone-mockup {
-            border: 12px solid #064E3B;
-            border-radius: 40px;
-            overflow: hidden;
-            position: relative;
-            background: white;
-            box-shadow: 20px 20px 60px rgba(0,0,0,0.1);
-            aspect-ratio: 9/19;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-        .phone-notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 25px;
-            background: #064E3B;
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            z-index: 10;
-        }
-        
-        /* Scrollbar oculta para elementos horizontales */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        body { font-family: 'Quicksand', sans-serif; color: #064E3B; background-color: #FAFAF9; scroll-behavior: smooth; }
+        h1, h2, h3, h4, .font-display { font-family: 'Caprasimo', cursive; }
+        .btn-hover { transition: all 0.3s ease; }
+        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(198, 245, 212, 0.5); }
+        .phone-mockup { border: 12px solid #064E3B; border-radius: 40px; overflow: hidden; position: relative; background: white; box-shadow: 20px 20px 60px rgba(0,0,0,0.1); aspect-ratio: 9/19; max-width: 300px; margin: 0 auto; }
+        .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #064E3B; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 10; }
+        #ai-chat-window { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(20px); opacity: 0; pointer-events: none; }
+        #ai-chat-window.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        .typing-dot { width: 8px; height: 8px; background: #059669; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden">
 
-    <!-- NAV / ENCABEZADO -->
+    <!-- NAV -->
     <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-aloha-main/30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-                    <!-- Icono de casita simple -->
-                    <svg class="w-8 h-8 text-aloha-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    <span class="font-display text-2xl text-aloha-text tracking-wide">AlohaApp</span>
-                </div>
-                
-                <!-- Links Desktop -->
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#como-funciona" class="text-aloha-text font-bold hover:text-aloha-dark transition">Cómo funciona</a>
-                    <a href="#beneficios" class="text-aloha-text font-bold hover:text-aloha-dark transition">Beneficios</a>
-                    <a href="#landlords" class="text-aloha-text font-bold hover:text-aloha-dark transition">Soy Arrendador</a>
-                    <a href="#download" class="bg-aloha-text text-white px-6 py-2 rounded-full font-bold hover:bg-aloha-dark transition shadow-lg transform hover:-translate-y-1">
-                        Descargar App
-                    </a>
-                </div>
-
-                <!-- Menú Móvil Botón -->
-                <div class="md:hidden flex items-center">
-                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-aloha-text p-2">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    </button>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <svg class="w-8 h-8 text-aloha-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span class="font-display text-2xl text-aloha-text">AlohaApp</span>
             </div>
-        </div>
-        <!-- Menú Móvil Desplegable -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 p-4 absolute w-full shadow-lg">
-            <div class="flex flex-col space-y-4">
-                <a href="#como-funciona" class="text-aloha-text font-bold">Cómo funciona</a>
-                <a href="#beneficios" class="text-aloha-text font-bold">Beneficios</a>
-                <a href="#landlords" class="text-aloha-text font-bold">Soy Arrendador</a>
-                <a href="#download" class="bg-aloha-main text-aloha-text px-4 py-2 rounded-xl font-bold text-center">Descargar</a>
+            <div class="hidden md:flex space-x-8 items-center font-bold">
+                <a href="#como-funciona" class="hover:text-aloha-dark transition">Cómo funciona</a>
+                <a href="#blog" class="hover:text-aloha-dark transition">Blog</a>
+                <a href="#landlords" class="hover:text-aloha-dark transition">Soy Arrendador</a>
+                <button onclick="toggleChat()" class="text-aloha-text bg-aloha-main/30 px-4 py-2 rounded-full border border-aloha-main">✨ IA Asistente</button>
             </div>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-gradient-to-br from-aloha-light to-white">
-        <!-- Elementos decorativos de fondo -->
-        <div class="absolute top-20 right-0 w-64 h-64 bg-aloha-main rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-yellow-100 rounded-full blur-3xl opacity-50 translate-y-1/3 -translate-x-1/3"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <!-- Texto Hero -->
-                <div class="text-center lg:text-left">
-                    <span class="inline-block py-1 px-3 rounded-full bg-aloha-main/40 text-aloha-text text-sm font-bold mb-6">
-                        👋 ¡Hola estudiantes!
-                    </span>
-                    <h1 class="text-5xl lg:text-7xl mb-6 text-aloha-text leading-tight">
-                        Tu nuevo hogar,<br> cerca de <span class="relative inline-block text-aloha-dark">clases
-                            <svg class="absolute w-full h-3 -bottom-1 left-0 text-aloha-main opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="8" fill="none"/></svg>
-                        </span>.
-                    </h1>
-                    <p class="text-xl text-gray-600 mb-8 max-w-lg mx-auto lg:mx-0">
-                        Encuentra habitaciones y departamentos verificados a pasos de tu universidad. Sin papeleos eternos, sin estrés.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="#download" class="btn-hover flex items-center justify-center gap-2 bg-aloha-text text-white px-8 py-4 rounded-2xl font-bold text-lg">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.5,12.5V16H16V12.5H12.5V11H16V7.5H17.5V11H21V12.5H17.5M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z"></path></svg>
-                            Descargar App
-                        </a>
-                        <a href="#como-funciona" class="btn-hover flex items-center justify-center gap-2 bg-white border-2 border-aloha-text text-aloha-text px-8 py-4 rounded-2xl font-bold text-lg hover:bg-aloha-light">
-                            Ver cómo funciona
-                        </a>
-                    </div>
-                    <div class="mt-8 flex items-center justify-center lg:justify-start gap-4 text-sm font-semibold text-gray-500">
-                        <div class="flex -space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-gray-300 border-2 border-white"></div>
-                            <div class="w-8 h-8 rounded-full bg-gray-400 border-2 border-white"></div>
-                            <div class="w-8 h-8 rounded-full bg-gray-500 border-2 border-white"></div>
-                        </div>
-                        <p>+5,000 estudiantes confían en Aloha</p>
-                    </div>
-                </div>
-
-                <!-- Imagen / Mockup -->
-                <div class="relative">
-                    <!-- Decoración circular detrás del teléfono -->
-                    <div class="absolute inset-0 bg-aloha-main rounded-full rotate-6 scale-90 opacity-40 blur-xl"></div>
-                    
-                    <!-- Teléfono CSS -->
-                    <div class="phone-mockup">
-                        <div class="phone-notch"></div>
-                        <!-- Pantalla App -->
-                        <div class="h-full w-full bg-gray-50 flex flex-col pt-8">
-                            <!-- App Header -->
-                            <div class="px-4 pb-2 flex justify-between items-center">
-                                <div>
-                                    <p class="text-xs text-gray-400">Ubicación actual</p>
-                                    <p class="font-bold text-aloha-text text-sm flex items-center gap-1">
-                                        Zona Universitaria <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </p>
-                                </div>
-                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
-                            </div>
-                            
-                            <!-- Search Bar -->
-                            <div class="px-4 mb-4">
-                                <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex gap-2 items-center">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                    <span class="text-xs text-gray-400">Buscar depa...</span>
-                                </div>
-                            </div>
-
-                            <!-- Listado Vertical -->
-                            <div class="flex-1 overflow-hidden relative px-4 space-y-3">
-                                <!-- Card 1 -->
-                                <div class="bg-white p-2 rounded-2xl shadow-sm border border-gray-100 flex gap-3">
-                                    <div class="w-16 h-16 bg-aloha-main rounded-xl flex-shrink-0"></div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between">
-                                            <h4 class="font-bold text-aloha-text text-xs">Loft Estudiantil</h4>
-                                            <span class="text-xs font-bold text-aloha-dark">$3,500</span>
-                                        </div>
-                                        <p class="text-[10px] text-gray-400 mt-1">A 5 min del campus</p>
-                                        <div class="flex gap-1 mt-2">
-                                            <span class="px-1.5 py-0.5 bg-green-50 text-green-600 rounded text-[9px] font-bold">WiFi</span>
-                                            <span class="px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded text-[9px] font-bold">Amueblado</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card 2 -->
-                                <div class="bg-white p-2 rounded-2xl shadow-sm border border-gray-100 flex gap-3 opacity-80">
-                                    <div class="w-16 h-16 bg-blue-100 rounded-xl flex-shrink-0"></div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between">
-                                            <h4 class="font-bold text-aloha-text text-xs">Habitación Sol</h4>
-                                            <span class="text-xs font-bold text-aloha-dark">$2,800</span>
-                                        </div>
-                                        <p class="text-[10px] text-gray-400 mt-1">Incluye servicios</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- App Navbar Bottom -->
-                            <div class="bg-white border-t p-3 flex justify-around items-center">
-                                <div class="w-5 h-5 bg-aloha-text rounded-full"></div>
-                                <div class="w-5 h-5 bg-gray-200 rounded-full"></div>
-                                <div class="w-5 h-5 bg-gray-200 rounded-full"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- HERO -->
+    <header class="relative pt-32 pb-20 lg:pt-48 bg-gradient-to-br from-aloha-light to-white">
+        <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="text-center lg:text-left">
+                <span class="inline-block py-1 px-3 rounded-full bg-aloha-main/40 text-aloha-text text-sm font-bold mb-6">👋 ¡Hola estudiantes!</span>
+                <h1 class="text-5xl lg:text-7xl mb-6 text-aloha-text">Tu nuevo hogar,<br>cerca de clases.</h1>
+                <p class="text-xl text-gray-600 mb-8">Encuentra el lugar ideal con ayuda de nuestra IA. Verificado y seguro.</p>
+                <button onclick="toggleChat()" class="btn-hover bg-aloha-text text-white px-8 py-4 rounded-2xl font-bold text-lg">✨ Probar IA Finder</button>
             </div>
+            <div class="phone-mockup"><div class="phone-notch"></div><div class="h-full w-full bg-gray-50 pt-8 px-4 text-xs font-bold text-aloha-text text-center"><br><br>Aloha App IA</div></div>
         </div>
     </header>
 
-    <!-- CÓMO FUNCIONA -->
-    <section id="como-funciona" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl text-aloha-text mb-4">¿Cómo funciona Aloha?</h2>
-                <p class="text-gray-500 max-w-2xl mx-auto">Conectamos inquilinos con propietarios de forma segura y directa. Sin rodeos.</p>
-            </div>
-
+    <!-- BLOG -->
+    <section id="blog" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl text-aloha-text mb-12">Blog Aloha</h2>
             <div class="grid md:grid-cols-3 gap-8">
-                <!-- Paso 1 -->
-                <div class="bg-gray-50 p-8 rounded-3xl hover:bg-aloha-light transition duration-300 border border-transparent hover:border-aloha-main group">
-                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-sm group-hover:scale-110 transition">
-                        📍
-                    </div>
-                    <h3 class="text-xl font-bold text-aloha-text mb-2">1. Explora el mapa</h3>
-                    <p class="text-gray-500">Filtra por universidad, precio o servicios. Encuentra lo que realmente te queda cerca.</p>
+                <div class="bg-gray-50 rounded-3xl p-6 hover:bg-aloha-light transition cursor-pointer">
+                    <div class="h-40 bg-aloha-main rounded-2xl mb-4 flex items-center justify-center text-4xl">📦</div>
+                    <h3 class="font-bold text-xl mb-2">Tips para tu mudanza</h3>
+                    <p class="text-sm text-gray-500">Todo lo que necesitas saber antes de empacar.</p>
                 </div>
-                <!-- Paso 2 -->
-                <div class="bg-gray-50 p-8 rounded-3xl hover:bg-aloha-light transition duration-300 border border-transparent hover:border-aloha-main group">
-                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-sm group-hover:scale-110 transition">
-                        💬
-                    </div>
-                    <h3 class="text-xl font-bold text-aloha-text mb-2">2. Conecta directo</h3>
-                    <p class="text-gray-500">Chatea con el arrendador dentro de la app. Resuelve dudas y agenda una visita virtual o presencial.</p>
+                <div class="bg-gray-50 rounded-3xl p-6 hover:bg-aloha-light transition cursor-pointer">
+                    <div class="h-40 bg-yellow-100 rounded-2xl mb-4 flex items-center justify-center text-4xl">👫</div>
+                    <h3 class="font-bold text-xl mb-2">Vivir con roomies</h3>
+                    <p class="text-sm text-gray-500">Reglas de oro para una convivencia sana.</p>
                 </div>
-                <!-- Paso 3 -->
-                <div class="bg-gray-50 p-8 rounded-3xl hover:bg-aloha-light transition duration-300 border border-transparent hover:border-aloha-main group">
-                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-sm group-hover:scale-110 transition">
-                        🏠
-                    </div>
-                    <h3 class="text-xl font-bold text-aloha-text mb-2">3. Haz check-in</h3>
-                    <p class="text-gray-500">Paga tu primer mes de forma segura a través de AlohaApp y ¡múdate sin problemas!</p>
+                <div class="bg-gray-50 rounded-3xl p-6 hover:bg-aloha-light transition cursor-pointer">
+                    <div class="h-40 bg-aloha-light rounded-2xl mb-4 flex items-center justify-center text-4xl">🍳</div>
+                    <h3 class="font-bold text-xl mb-2">Meal Prep Semanal</h3>
+                    <p class="text-sm text-gray-500">Ahorra tiempo y dinero cocinando en casa.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- BENEFICIOS -->
-    <section id="beneficios" class="py-20 bg-aloha-light relative overflow-hidden">
-        <!-- Decoracion -->
-        <div class="absolute top-0 right-0 w-64 h-64 bg-aloha-main opacity-20 rounded-full translate-x-1/2 -translate-y-1/2"></div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                
-                <!-- Mockup Interfaz Chat/Pago -->
-                <div class="order-2 lg:order-1 flex justify-center">
-                   <div class="w-72 bg-white rounded-[2.5rem] p-4 shadow-2xl border-4 border-white">
-                        <div class="bg-gray-50 h-96 rounded-[1.5rem] p-4 relative overflow-hidden">
-                            <!-- Burbuja de Chat -->
-                            <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm mb-3 w-4/5">
-                                <p class="text-xs text-gray-500 font-bold mb-1">Arrendador Juan</p>
-                                <p class="text-xs text-gray-600">¡Claro! El departamento incluye internet de alta velocidad.</p>
-                            </div>
-                             <div class="bg-aloha-main p-3 rounded-2xl rounded-tr-none shadow-sm mb-6 w-4/5 ml-auto">
-                                <p class="text-xs text-aloha-text font-bold">¡Perfecto! Me interesa apartarlo.</p>
-                            </div>
-                            <!-- Tarjeta de Pago Seguro -->
-                            <div class="bg-aloha-text p-4 rounded-2xl text-white shadow-lg absolute bottom-4 left-4 right-4">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-xs opacity-70">Pago Seguro Aloha</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <p class="font-display text-lg mb-1">$4,500.00</p>
-                                <p class="text-[10px] opacity-70">Comisión transparente incluida</p>
-                            </div>
-                        </div>
-                   </div>
-                </div>
-
-                <!-- Textos -->
-                <div class="order-1 lg:order-2">
-                    <h2 class="text-4xl text-aloha-text mb-6 leading-tight">Más que una app, tu aliado en la mudanza.</h2>
-                    <div class="space-y-6">
-                        <div class="flex gap-4">
-                            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-aloha-dark shrink-0 shadow-sm">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-bold text-aloha-text">Seguridad Primero</h4>
-                                <p class="text-gray-600 text-sm mt-1">Verificamos la identidad de todos los arrendadores. Tu dinero está protegido hasta que confirmas la llegada.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-4">
-                             <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-aloha-dark shrink-0 shadow-sm">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-bold text-aloha-text">Comisiones Justas</h4>
-                                <p class="text-gray-600 text-sm mt-1">Nuestra tarifa de servicio es mínima y transparente. Sin letras chiquitas.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-4">
-                             <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-aloha-dark shrink-0 shadow-sm">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-bold text-aloha-text">Diseñado para jóvenes</h4>
-                                <p class="text-gray-600 text-sm mt-1">Filtros que te importan: ¿Aceptan mascotas? ¿Hay roomies? ¿Está cerca del metro?</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- LANDLORDS / ARRENDADORES -->
-    <section id="landlords" class="py-20 bg-white border-t border-gray-100">
-        <div class="max-w-5xl mx-auto px-4 bg-aloha-text rounded-[3rem] text-white p-12 relative overflow-hidden shadow-2xl">
-            <!-- Circulos decorativos -->
-            <div class="absolute top-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-            <div class="absolute bottom-0 right-0 w-96 h-96 bg-aloha-main opacity-10 rounded-full translate-x-1/3 translate-y-1/3"></div>
-
-            <div class="relative z-10 text-center">
-                <span class="text-aloha-main font-bold tracking-widest text-sm uppercase mb-4 block">Para Propietarios</span>
-                <h2 class="text-3xl md:text-5xl font-display mb-6">¿Tienes una habitación vacía?</h2>
-                <p class="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
-                    Monetiza tu espacio extra rentando a estudiantes verificados. Nosotros gestionamos los cobros y te damos visibilidad.
-                </p>
-                <button class="bg-aloha-main text-aloha-text font-bold px-8 py-4 rounded-full hover:bg-white transition transform hover:scale-105 shadow-lg">
-                    Publicar mi espacio gratis
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA DOWNLOAD -->
-    <section id="download" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-4xl text-aloha-text mb-8">Descarga AlohaApp hoy</h2>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <!-- Botón Android -->
-                <button class="flex items-center bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition shadow-lg">
-                    <svg class="w-8 h-8 mr-3" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414C17.523 15.3414 17.523 15.3414 17.523 15.3414C17.4842 15.3414 17.4475 15.3414 17.4109 15.3414C17.2285 15.8291 16.8906 16.2443 16.4561 16.5332C15.9892 16.8436 15.4414 17.0212 14.8477 17.0212C14.2541 17.0212 13.7063 16.8436 13.2394 16.5332C12.8049 16.2443 12.467 15.8291 12.2846 15.3414C12.2479 15.3414 12.2113 15.3414 12.1725 15.3414C12.1725 15.3414 12.1725 15.3414 12.1725 15.3414C11.9902 15.8291 11.6523 16.2443 11.2178 16.5332C10.7509 16.8436 10.2031 17.0212 9.6094 17.0212C9.0157 17.0212 8.4679 16.8436 8.001 16.5332C7.5665 16.2443 7.2286 15.8291 7.0463 15.3414C7.0096 15.3414 6.973 15.3414 6.9342 15.3414C5.1102 15.3414 3.6309 13.8621 3.6309 12.0381C3.6309 10.2141 5.1102 8.7348 6.9342 8.7348C6.973 8.7348 7.0096 8.7348 7.0463 8.7348C7.2286 8.2471 7.5665 7.8319 8.001 7.543C8.4679 7.2326 9.0157 7.055 9.6094 7.055C10.2031 7.055 10.7509 7.2326 11.2178 7.543C11.6523 7.8319 11.9902 8.2471 12.1725 8.7348C12.2113 8.7348 12.2479 8.7348 12.2846 8.7348C12.467 8.2471 12.8049 7.8319 13.2394 7.543C13.7063 7.2326 14.2541 7.055 14.8477 7.055C15.4414 7.055 15.9892 7.2326 16.4561 7.543C16.8906 7.8319 17.2285 8.2471 17.4109 8.7348C17.4475 8.7348 17.4842 8.7348 17.523 8.7348C19.347 8.7348 20.8263 10.2141 20.8263 12.0381C20.8263 13.8621 19.347 15.3414 17.523 15.3414ZM14.8477 8.1633C14.0768 8.1633 13.4475 8.7926 13.4475 9.5635V14.5127C13.4475 15.2836 14.0768 15.9129 14.8477 15.9129C15.6186 15.9129 16.2479 15.2836 16.2479 14.5127V9.5635C16.2479 8.7926 15.6186 8.1633 14.8477 8.1633ZM9.6094 8.1633C8.8385 8.1633 8.2092 8.7926 8.2092 9.5635V14.5127C8.2092 15.2836 8.8385 15.9129 9.6094 15.9129C10.3803 15.9129 11.0096 15.2836 11.0096 14.5127V9.5635C11.0096 8.7926 10.3803 8.1633 9.6094 8.1633Z"/></svg>
-                    <div class="text-left">
-                        <p class="text-[10px] uppercase">Disponible en</p>
-                        <p class="text-sm font-bold font-display">Google Play</p>
-                    </div>
-                </button>
-                
-                <!-- Botón iOS -->
-                <button class="flex items-center bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition shadow-lg">
-                    <svg class="w-8 h-8 mr-3" viewBox="0 0 24 24" fill="currentColor"><path d="M16.636 11.832c.033 2.656 2.324 3.542 2.345 3.551-.019.065-.366 1.255-1.206 2.484-.726 1.062-1.485 2.119-2.673 2.14-1.167.02-1.543-.693-2.882-.693-1.336 0-1.754.673-2.863.714-1.148.04-2.023-1.148-2.756-2.205-1.503-2.171-2.65-6.137-1.109-8.813.766-1.329 2.136-2.17 3.623-2.211 1.129-.031 2.196.76 2.883.76.685 0 1.969-.938 3.313-.8 1.134.047 2.164.458 2.766 1.125-.069.043-1.652.964-1.636 2.943zm-2.402-5.464c.613-.742 1.026-1.774.913-2.802-.884.036-1.956.59-2.591 1.353-.568.675-1.064 1.755-.931 2.76.987.076 1.996-.518 2.609-1.311z"/></svg>
-                    <div class="text-left">
-                        <p class="text-[10px] uppercase">Consíguelo en</p>
-                        <p class="text-sm font-bold font-display">App Store</p>
-                    </div>
-                </button>
+    <!-- LANDLORDS IA -->
+    <section id="landlords" class="py-20 bg-white">
+        <div class="max-w-5xl mx-auto px-4 bg-aloha-text rounded-[3rem] text-white p-12 text-center">
+            <h2 class="text-3xl md:text-5xl font-display mb-6">Redactor de Anuncios IA</h2>
+            <p class="mb-8 text-gray-300">Dinos qué tiene tu cuarto y nosotros escribimos el anuncio.</p>
+            <div class="max-w-xl mx-auto space-y-4">
+                <textarea id="landlord-input" class="w-full bg-white/10 rounded-2xl p-4 text-white placeholder-white/40 border-none focus:ring-2 focus:ring-aloha-main" placeholder="Ej: Cuarto con baño, cerca de CU, servicios incluidos..."></textarea>
+                <button onclick="generateListing()" class="w-full bg-aloha-main text-aloha-text font-bold py-4 rounded-2xl hover:bg-white transition">✨ Generar Descripción</button>
+                <div id="listing-result" class="hidden mt-4 p-4 bg-white rounded-2xl text-aloha-text text-sm italic whitespace-pre-wrap text-left"></div>
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-aloha-text text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-8">
-                <div class="col-span-1 md:col-span-1">
-                    <span class="font-display text-2xl tracking-wide text-aloha-main mb-4 block">AlohaApp</span>
-                    <p class="text-sm text-gray-300">
-                        Haciendo la vida estudiantil más fácil, una habitación a la vez.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-4">Compañía</h4>
-                    <ul class="space-y-2 text-sm text-gray-300">
-                        <li><a href="#" class="hover:text-aloha-main">Acerca de</a></li>
-                        <li><a href="#" class="hover:text-aloha-main">Blog</a></li>
-                        <li><a href="#" class="hover:text-aloha-main">Prensa</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-4">Legal</h4>
-                    <ul class="space-y-2 text-sm text-gray-300">
-                        <li><a href="#" class="hover:text-aloha-main">Términos y condiciones</a></li>
-                        <li><a href="#" class="hover:text-aloha-main">Privacidad</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-4">Contacto</h4>
-                    <ul class="space-y-2 text-sm text-gray-300">
-                        <li>hola@alohaapp.com</li>
-                        <li>+52 55 1234 5678</li>
-                        <li class="flex gap-4 mt-4">
-                            <!-- Social Icons (Placeholders) -->
-                            <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-aloha-main hover:text-aloha-text transition">IG</a>
-                            <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-aloha-main hover:text-aloha-text transition">TW</a>
-                            <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-aloha-main hover:text-aloha-text transition">FB</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-white/10 mt-12 pt-8 text-center text-xs text-gray-400">
-                &copy; 2024 AlohaApp Inc. Todos los derechos reservados.
+    <footer class="bg-aloha-text text-white py-12 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-center md:text-left">
+            <div><span class="font-display text-2xl text-aloha-main block mb-4">AlohaApp</span><p class="text-sm text-gray-400">Tu hogar estudiantil.</p></div>
+            <div><h4 class="font-bold mb-4">Compañía</h4><ul class="text-sm space-y-2"><li><a href="#blog">Blog</a></li></ul></div>
+            <div><h4 class="font-bold mb-4">Legal</h4><ul class="text-sm space-y-2"><li>Términos</li></ul></div>
+            <div>
+                <h4 class="font-bold mb-4">Social</h4>
+                <a href="[https://www.instagram.com/aloha_.app?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==](https://www.instagram.com/aloha_.app?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==)" target="_blank" class="flex items-center justify-center md:justify-start gap-2 hover:text-aloha-main transition">
+                    <span class="text-sm font-bold">@Aloha_.App</span>
+                </a>
             </div>
         </div>
     </footer>
 
+    <!-- CHAT WIDGET -->
+    <div id="ai-chat-window" class="fixed bottom-24 right-4 w-[90vw] md:w-96 bg-white rounded-3xl shadow-2xl z-50 border border-aloha-main/20 flex flex-col h-[500px]">
+        <div class="bg-aloha-text p-4 text-white font-bold flex justify-between rounded-t-3xl"><span>✨ Aloha Asistente</span><button onclick="toggleChat()">✕</button></div>
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 text-sm bg-gray-50"></div>
+        <div class="p-4 border-t flex gap-2"><input id="chat-input" type="text" class="flex-1 bg-gray-100 rounded-xl px-4 py-2 outline-none" placeholder="¿Dónde quieres vivir?"><button onclick="sendChatMessage()" class="bg-aloha-text text-white px-4 py-2 rounded-xl">Enviar</button></div>
+    </div>
+    <button onclick="toggleChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-aloha-text text-white rounded-full shadow-xl flex items-center justify-center text-2xl z-40">✨</button>
+
+    <script>
+        const apiKey = "";
+        async function callGemini(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: "Eres el asistente de AlohaApp. Ayudas a estudiantes a encontrar casa y a dueños a escribir anuncios. Eres amigable y usas emojis." }] } })
+                });
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Error de respuesta.";
+            } catch (e) { return "Lo siento, hubo un error."; }
+        }
+
+        function toggleChat() { document.getElementById('ai-chat-window').classList.toggle('open'); }
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value; if(!msg) return;
+            const chat = document.getElementById('chat-messages');
+            chat.innerHTML += `<div class="bg-aloha-text text-white p-3 rounded-2xl ml-auto max-w-[80%]">${msg}</div>`;
+            input.value = '';
+            const res = await callGemini(msg);
+            chat.innerHTML += `<div class="bg-white p-3 rounded-2xl border border-gray-100 max-w-[80%]">${res}</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        }
+        async function generateListing() {
+            const input = document.getElementById('landlord-input').value; if(!input) return;
+            const resBox = document.getElementById('listing-result');
+            resBox.classList.remove('hidden'); resBox.textContent = "Generando...";
+            const res = await callGemini(`Redacta un anuncio de renta atractivo basado en esto: ${input}`);
+            resBox.textContent = res;
+        }
+    </script>
 </body>
 </html>
